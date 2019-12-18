@@ -6,25 +6,31 @@ import cats.implicits._
 
 object FormValidatorCats extends FormValidator {
 
-  import mycats.registrationExample.DomainValidation._
+  private type ValidationResult[A] = Validated[NonEmptyChain[DomainValidation], A]
 
-  private type ValidationResult[A] = ValidatedNec[DomainValidation, A]
+  private def toValidated[A](e: Either[DomainValidation, A]): ValidationResult[A] = {
+    Validated.fromEither(e).leftMap(NonEmptyChain(_))
+  }
 
-  private def validateUserName(userName: String): ValidationResult[String] =
-    if (userName.matches("^[a-zA-Z0-9]+$")) userName.validNec else UsernameHasSpecialCharacters.invalidNec
+  private def validateUserName(userName: String): ValidationResult[String] = {
+    toValidated(validateUserNameEither(userName))
+  }
 
-  private def validatePassword(password: String): ValidationResult[String] =
-    if (password.matches("(?=^.{10,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$")) password.validNec
-    else PasswordDoesNotMeetCriteria.invalidNec
+  private def validatePassword(password: String): ValidationResult[String] = {
+    toValidated(validatePasswordEither(password))
+  }
 
-  private def validateFirstName(firstName: String): ValidationResult[String] =
-    if (firstName.matches("^[a-zA-Z]+$")) firstName.validNec else FirstNameHasSpecialCharacters.invalidNec
+  private def validateFirstName(firstName: String): ValidationResult[String] = {
+    toValidated(validateFirstNameEither(firstName))
+  }
 
-  private def validateLastName(lastName: String): ValidationResult[String] =
-    if (lastName.matches("^[a-zA-Z]+$")) lastName.validNec else LastNameHasSpecialCharacters.invalidNec
+  private def validateLastName(lastName: String): ValidationResult[String] = {
+    toValidated(validateLastNameEither(lastName))
+  }
 
-  private def validateAge(age: Int): ValidationResult[Int] =
-    if (age >= 18 && age <= 75) age.validNec else AgeIsInvalid.invalidNec
+  private def validateAge(age: Int): ValidationResult[Int] = {
+    toValidated(validateAgeEither(age))
+  }
 
   override def validateForm(
       username: String,
