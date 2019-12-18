@@ -1,7 +1,6 @@
 package mycats.registrationExample
 
-import cats.data._
-import cats.data.Validated._
+import cats.data.ValidatedNec
 import cats.implicits._
 
 object FormValidatorCats extends FormValidator {
@@ -22,7 +21,7 @@ object FormValidatorCats extends FormValidator {
       validateAge(age).toValidatedNec
     ).mapN(RegistrationData)
 
-    v.toEither.leftMap(_.toList)
+    v.toEither.left.map(_.toList)
   }
 
 }

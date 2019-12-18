@@ -13,6 +13,7 @@ lazy val root = (project in file("."))
     name := "scala-sandbox",
     libraryDependencies += scalaTest % Test,
     libraryDependencies += cats,
+    libraryDependencies ++= circe,
     libraryDependencies += scalaz,
     scalafmtOnCompile := true,
   )
