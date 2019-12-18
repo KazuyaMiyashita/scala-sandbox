@@ -4,11 +4,11 @@ import cats.data._
 import cats.data.Validated._
 import cats.implicits._
 
-sealed trait FormValidatorNec {
+object FormValidatorCats extends FormValidator {
 
   import mycats.registrationExample.DomainValidation._
 
-  type ValidationResult[A] = ValidatedNec[DomainValidation, A]
+  private type ValidationResult[A] = ValidatedNec[DomainValidation, A]
 
   private def validateUserName(userName: String): ValidationResult[String] =
     if (userName.matches("^[a-zA-Z0-9]+$")) userName.validNec else UsernameHasSpecialCharacters.invalidNec
@@ -26,22 +26,22 @@ sealed trait FormValidatorNec {
   private def validateAge(age: Int): ValidationResult[Int] =
     if (age >= 18 && age <= 75) age.validNec else AgeIsInvalid.invalidNec
 
-  def validateForm(
+  override def validateForm(
       username: String,
       password: String,
       firstName: String,
       lastName: String,
       age: Int
-  ): ValidationResult[RegistrationData] = {
-    (
+  ): Either[List[DomainValidation], RegistrationData] = {
+    val v: ValidationResult[RegistrationData] = (
       validateUserName(username),
       validatePassword(password),
       validateFirstName(firstName),
       validateLastName(lastName),
       validateAge(age)
     ).mapN(RegistrationData)
+
+    v.toEither.leftMap(_.toList)
   }
 
 }
-
-object FormValidatorNec extends FormValidatorNec
