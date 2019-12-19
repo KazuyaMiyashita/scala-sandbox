@@ -1,37 +1,27 @@
 package multipleResources
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import cats.Monad
 import cats.data.EitherT
 import cats.implicits._
 
-object MultipleResources {
+case class Target(name: String)
 
-  case class Target()
+trait Repository[F[_]] {
+  def fetch(): F[Option[Target]]
+}
 
-  def fetch(): Option[Target] = {
+class MultipleResources[F[_]: Monad](
+    cache: Repository[F],
+    database: Repository[F]
+) {
 
-    def fetchFromCache(): Option[Target]    = ???
-    def fetchFromDataBase(): Option[Target] = ???
+  def fetch(): F[Option[Target]] = {
 
-    val a: Either[Target, Unit] = for {
-      _ <- fetchFromCache().toLeft(())
-      _ <- fetchFromDataBase().toLeft(())
+    val a: EitherT[F, Target, Unit] = for {
+      _ <- EitherT(cache.fetch().map(_.toLeft(())))
+      _ <- EitherT(database.fetch().map(_.toLeft(())))
     } yield ()
-    a.swap.toOption
-
-  }
-
-  def fetchAsync(): Future[Option[Target]] = {
-
-    def fetchFromCacheAsync(): Future[Option[Target]]    = ???
-    def fetchFromDatabaseAsync(): Future[Option[Target]] = ???
-
-    val a: EitherT[Future, Target, Unit] = for {
-      _ <- EitherT(fetchFromCacheAsync().map(_.toLeft(())))
-      _ <- EitherT(fetchFromDatabaseAsync().map(_.toLeft(())))
-    } yield ()
-    val b: Future[Either[Target, Unit]] = a.value
+    val b: F[Either[Target, Unit]] = a.value
     b.map(_.swap.toOption)
 
   }
