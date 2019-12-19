@@ -2,7 +2,10 @@ package messagePassing
 import scala.collection.immutable.HashSet
 import java.util.UUID
 
-class Node(val name: String) {
+class Node(
+    val name: String,
+    messagePrinter: MessagePrinter
+) {
 
   private var knownNodes: Set[Node]           = Set.empty
   private var receivedMessages: List[Message] = Nil
@@ -25,7 +28,7 @@ class Node(val name: String) {
     if (!handledMessageIdSet.contains(message.id)) {
       handledMessageIdSet += message.id
       receivedMessages = message :: receivedMessages
-      println(s"""[${this.name}] received message "${message.value}"""")
+      messagePrinter.print(this, message)
       sendMessage(message)
     }
   }
