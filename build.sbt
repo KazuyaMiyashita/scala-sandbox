@@ -12,6 +12,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala-sandbox",
     libraryDependencies += scalaTest % Test,
+    libraryDependencies += scalaMock % Test,
     libraryDependencies += cats,
     libraryDependencies ++= circe,
     libraryDependencies ++= akka,
