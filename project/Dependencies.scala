@@ -8,5 +8,8 @@ object Dependencies {
     "io.circe" %% "circe-generic" % "0.12.3",
     "io.circe" %% "circe-parser" % "0.12.3"
   )
+  lazy val akka = Seq(
+    "com.typesafe.akka" %% "akka-actor" % "2.6.1"
+  )
   lazy val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.29"
 }

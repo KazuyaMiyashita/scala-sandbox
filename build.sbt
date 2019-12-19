@@ -14,6 +14,7 @@ lazy val root = (project in file("."))
     libraryDependencies += scalaTest % Test,
     libraryDependencies += cats,
     libraryDependencies ++= circe,
+    libraryDependencies ++= akka,
     libraryDependencies += scalaz,
     scalafmtOnCompile := true,
   )
