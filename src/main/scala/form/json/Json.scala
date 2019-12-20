@@ -11,4 +11,7 @@ object Json {
 
   def parse(input: String): Either[String, JsValue] = JsonParser(input)
 
+  import language.experimental.macros
+  def autoDecoder[T]: Decoder[T] = macro AutoDecoderImpl[T]
+
 }

@@ -18,6 +18,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= akka,
     libraryDependencies += scalaz,
     libraryDependencies += scalaParser,
+    libraryDependencies += scalaRefrect,
     scalafmtOnCompile := true,
   )
 

@@ -14,4 +14,5 @@ object Dependencies {
   )
   lazy val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.29"
   lazy val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
+  lazy val scalaRefrect = "org.scala-lang" % "scala-reflect" % "2.13.1"
 }
