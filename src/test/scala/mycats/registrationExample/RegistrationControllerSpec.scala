@@ -49,22 +49,23 @@ class RegistrationControllerSpec extends FlatSpec with Matchers {
 
   }
 
-  "RegistrationController.handleRequest" should "show parsing error" in {
+  // TODO: jsonパーサー作り終わったらやる
+  // "RegistrationController.handleRequest" should "show parsing error" in {
 
-    val request =
-      """|{
-         |  "username": "Joe",
-         |  "password": "Passw0r$1234",
-         |  "firstName": "John",
-         |  "age": "21"
-         |}
-         |""".stripMargin
+  //   val request =
+  //     """|{
+  //        |  "username": "Joe",
+  //        |  "password": "Passw0r$1234",
+  //        |  "firstName": "John",
+  //        |  "age": "21"
+  //        |}
+  //        |""".stripMargin
 
-    val result = controller.handleRequest(request)
-    val answer = "" // FIXME
+  //   val result = controller.handleRequest(request)
+  //   val answer = "" // FIXME
 
-    result shouldEqual answer
+  //   result shouldEqual answer
 
-  }
+  // }
 
 }
