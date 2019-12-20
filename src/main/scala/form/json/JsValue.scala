@@ -5,7 +5,7 @@ trait JsValue {
   def apply(key: Int): JsValue
   def \(key: String): JsPath
   def \(key: Int): JsPath
-  final def as[T](implicit c: Converter[T]): Option[T] = c.convert(this)
+  final def as[T](implicit c: Decoder[T]): Option[T] = c.decode(this)
 }
 case class JsString(value: String) extends JsValue {
   override def apply(key: String): JsValue = throw new NoSuchElementException

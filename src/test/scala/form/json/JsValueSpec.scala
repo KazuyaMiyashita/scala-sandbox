@@ -111,11 +111,11 @@ class JsValueSpec extends FlatSpec with Matchers {
     import scala.util.Try
     import java.time.LocalDateTime
 
-    implicit object LocalDateTimeConverter extends Converter[LocalDateTime] {
+    implicit object LocalDateTimeConverter extends Decoder[LocalDateTime] {
       def ldtconvert(str: String): Option[LocalDateTime] = {
         Try(LocalDateTime.parse(str)).toOption
       }
-      override def convert(js: JsValue): Option[LocalDateTime] = js match {
+      override def decode(js: JsValue): Option[LocalDateTime] = js match {
         case JsString(value) => ldtconvert(value)
         case _               => None
       }
