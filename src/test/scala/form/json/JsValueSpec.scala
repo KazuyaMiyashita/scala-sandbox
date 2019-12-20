@@ -138,4 +138,29 @@ class JsValueSpec extends FlatSpec with Matchers {
 
   }
 
+  "JsValue" should "get value throws exception (1)" in {
+
+    val result: JsValue = template("residents")(0)("name")
+    val answer          = JsString("Fiver")
+    result shouldEqual answer
+
+  }
+
+  "JsValue" should "get value throws exception (2)" in {
+
+    val json: JsValue = JsString("foo")
+    intercept[NoSuchElementException] {
+      json("bar")
+    }
+
+  }
+
+  "JsValue" should "get value throws exception (3)" in {
+
+    intercept[NoSuchElementException] {
+      (template \ "location")("latitude")
+    }
+
+  }
+
 }
