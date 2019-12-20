@@ -29,8 +29,16 @@ object Decoder {
 
   implicit def ListDecoder[U: Decoder] = new Decoder[List[U]] {
     override def decode(js: JsValue): Option[List[U]] = js match {
-      case JsArray(value) => Some(value.flatMap(_.as[U]).toList)
-      case _              => None
+      // JsArrayの中の要素がUに揃っていなければLeft
+      case JsArray(value) =>
+        value
+          .foldLeft[Option[List[U]]](Some(Nil)) { (acc, value) =>
+            value.as[U].flatMap { u =>
+              acc.map(u :: _)
+            }
+          }
+          .map(_.reverse)
+      case _ => None
     }
   }
 

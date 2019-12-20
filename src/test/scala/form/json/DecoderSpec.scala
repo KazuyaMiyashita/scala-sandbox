@@ -79,12 +79,12 @@ class DecoderSpec extends FlatSpec with Matchers {
       Vector(
         JsString("first"),
         JsString("second"),
-        JsBoolean(true), // こいつは消滅する
+        JsBoolean(true), // こいつが型が合わないのでNoneになる
         JsString("third")
       )
     )
     val reuslt: Option[List[String]] = json.as[List[String]]
-    val answer                       = Some("first" :: "second" :: "third" :: Nil)
+    val answer                       = None
 
     reuslt shouldEqual answer
 
