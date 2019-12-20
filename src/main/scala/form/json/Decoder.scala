@@ -2,6 +2,11 @@ package form.json
 
 trait Decoder[T] {
   def decode(js: JsValue): Option[T]
+  final def decodeOpt(js: JsValue): Option[Option[T]] =
+    Some(js match {
+      case JsNull => None
+      case j      => decode(j)
+    })
 }
 
 object Decoder {
@@ -16,6 +21,13 @@ object Decoder {
   implicit object DoubleDecoder extends Decoder[Double] {
     override def decode(js: JsValue): Option[Double] = js match {
       case JsNumber(value) => Some(value)
+      case _               => None
+    }
+  }
+
+  implicit object IntDecoder extends Decoder[Int] {
+    override def decode(js: JsValue): Option[Int] = js match {
+      case JsNumber(value) => Some(value.toInt)
       case _               => None
     }
   }

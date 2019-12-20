@@ -90,4 +90,140 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   }
 
+  "Decoder" should "decodeOpt (1)" in {
+
+    val json: JsValue = JsObject(
+      Map(
+        "key" -> JsString("value")
+      )
+    )
+    val result: Option[Option[String]] = (json \ "key").asOpt[String]
+    val answer: Option[Option[String]] = Some(Some("value"))
+
+    result shouldEqual answer
+
+  }
+
+  "Decoder" should "decodeOpt (2)" in {
+
+    val json: JsValue = JsObject(
+      Map(
+        "key" -> JsNull
+      )
+    )
+    val result: Option[Option[String]] = (json \ "key").asOpt[String]
+    val answer: Option[Option[String]] = Some(None)
+
+    result shouldEqual answer
+
+  }
+
+  "Decoder" should "decodeOpt (3)" in {
+
+    val json: JsValue                  = JsObject(Map.empty)
+    val result: Option[Option[String]] = (json \ "key").asOpt[String]
+    val answer: Option[Option[String]] = Some(None)
+
+    result shouldEqual answer
+
+  }
+
+  "Decoder" should "decode to case class (1)" in {
+
+    case class Person(
+        name: String,
+        age: Int,
+        favorites: List[String],
+        child: Option[Person]
+    )
+
+    val json: JsValue = JsObject(
+      Map(
+        "name" -> JsString("Bob"),
+        "age"  -> JsNumber(42),
+        "favorites" -> JsArray(
+          Vector(
+            JsString("Apple"),
+            JsString("Banana")
+          )
+        ),
+        "child" -> JsNull
+      )
+    )
+
+    implicit object PersonDecoder extends Decoder[Person] {
+      override def decode(js: JsValue): Option[Person] = js match {
+        case obj: JsObject =>
+          for {
+            name      <- (obj \ "name").as[String]
+            age       <- (obj \ "age").as[Int]
+            favorites <- (obj \ "favorites").as[List[String]]
+            child     <- (obj \ "child").asOpt[Person]
+          } yield Person(name, age, favorites, child)
+        case _ => None
+      }
+    }
+
+    val reuslt: Option[Person] = json.as[Person]
+    val answer                 = Some(Person("Bob", 42, List("Apple", "Banana"), None))
+
+    reuslt shouldEqual answer
+
+  }
+
+  "Decoder" should "decode to case class (2)" in {
+
+    case class Person(
+        name: String,
+        age: Int,
+        favorites: List[String],
+        child: Option[Person]
+    )
+
+    val json: JsValue = JsObject(
+      Map(
+        "name" -> JsString("Bob"),
+        "age"  -> JsNumber(42),
+        "favorites" -> JsArray(
+          Vector(
+            JsString("Apple"),
+            JsString("Banana")
+          )
+        ),
+        "child" -> JsObject(
+          Map(
+            "name" -> JsString("Alice"),
+            "age"  -> JsNumber(24),
+            "favorites" -> JsArray(
+              Vector.empty
+            ),
+            "child" -> JsNull
+          )
+        )
+      )
+    )
+
+    implicit object PersonDecoder extends Decoder[Person] {
+      override def decode(js: JsValue): Option[Person] = js match {
+        case obj: JsObject =>
+          for {
+            name      <- (obj \ "name").as[String]
+            age       <- (obj \ "age").as[Int]
+            favorites <- (obj \ "favorites").as[List[String]]
+            child     <- (obj \ "child").asOpt[Person]
+          } yield Person(name, age, favorites, child)
+        case _ => None
+      }
+    }
+
+    val reuslt: Option[Person] = json.as[Person]
+    val answer = {
+      val child = Some(Person("Alice", 24, Nil, None))
+      Some(Person("Bob", 42, List("Apple", "Banana"), child))
+    }
+
+    reuslt shouldEqual answer
+
+  }
+
 }
