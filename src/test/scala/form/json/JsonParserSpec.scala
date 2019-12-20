@@ -6,8 +6,6 @@ class JsonParserSpec extends FunSuite with Matchers {
 
   test("parse") {
 
-    val parser = new JsonParser
-
     val input = """
     |{
     |  "name" : "Watership Down",
@@ -27,34 +25,24 @@ class JsonParserSpec extends FunSuite with Matchers {
     |}
     |""".stripMargin
 
-    val result: Either[String, JsValue] = parser(input)
+    val result: Either[String, JsValue] = Json.parse(input)
     val answer: Either[String, JsValue] = Right(
-      JsObject(
-        Map(
-          "name" -> JsString("Watership Down"),
-          "location" -> JsObject(
-            Map(
-              "lat" -> JsNumber(51.235685),
-              "lng" -> JsNumber(-1.309197)
-            )
+      Json.obj(
+        "name" -> Json.str("Watership Down"),
+        "location" -> Json.obj(
+          "lat" -> Json.num(51.235685),
+          "lng" -> Json.num(-1.309197)
+        ),
+        "residents" -> Json.arr(
+          Json.obj(
+            "name" -> Json.str("Fiver"),
+            "age"  -> Json.num(4),
+            "role" -> Json.nul
           ),
-          "residents" -> JsArray(
-            Vector(
-              JsObject(
-                Map(
-                  "name" -> JsString("Fiver"),
-                  "age"  -> JsNumber(4),
-                  "role" -> JsNull
-                )
-              ),
-              JsObject(
-                Map(
-                  "name" -> JsString("Bigwig"),
-                  "age"  -> JsNumber(6),
-                  "role" -> JsString("Owsla")
-                )
-              )
-            )
+          Json.obj(
+            "name" -> Json.str("Bigwig"),
+            "age"  -> Json.num(6),
+            "role" -> Json.str("Owsla")
           )
         )
       )

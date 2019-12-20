@@ -6,7 +6,7 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decode string value" in {
 
-    val json: JsValue          = JsString("string value")
+    val json: JsValue          = Json.str("string value")
     val reuslt: Option[String] = json.as[String]
     val answer                 = Some("string value")
 
@@ -16,7 +16,7 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decode double value" in {
 
-    val json: JsValue          = JsNumber(42)
+    val json: JsValue          = Json.num(42)
     val reuslt: Option[Double] = json.as[Double]
     val answer                 = Some(42)
 
@@ -26,7 +26,7 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decode boolean value" in {
 
-    val json: JsValue           = JsBoolean(false)
+    val json: JsValue           = Json.bool(false)
     val reuslt: Option[Boolean] = json.as[Boolean]
     val answer                  = Some(false)
 
@@ -59,12 +59,10 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decode List[String] value (1)" in {
 
-    val json: JsValue = JsArray(
-      Vector(
-        JsString("first"),
-        JsString("second"),
-        JsString("third")
-      )
+    val json: JsValue = Json.arr(
+      Json.str("first"),
+      Json.str("second"),
+      Json.str("third")
     )
     val reuslt: Option[List[String]] = json.as[List[String]]
     val answer                       = Some("first" :: "second" :: "third" :: Nil)
@@ -75,13 +73,11 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decode List[String] value (2)" in {
 
-    val json: JsValue = JsArray(
-      Vector(
-        JsString("first"),
-        JsString("second"),
-        JsBoolean(true), // こいつが型が合わないのでNoneになる
-        JsString("third")
-      )
+    val json: JsValue = Json.arr(
+      Json.str("first"),
+      Json.str("second"),
+      Json.bool(true), // こいつが型が合わないのでNoneになる
+      Json.str("third")
     )
     val reuslt: Option[List[String]] = json.as[List[String]]
     val answer                       = None
@@ -92,10 +88,8 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decodeOpt (1)" in {
 
-    val json: JsValue = JsObject(
-      Map(
-        "key" -> JsString("value")
-      )
+    val json: JsValue = Json.obj(
+      "key" -> Json.str("value")
     )
     val result: Option[Option[String]] = (json \ "key").asOpt[String]
     val answer: Option[Option[String]] = Some(Some("value"))
@@ -106,10 +100,8 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decodeOpt (2)" in {
 
-    val json: JsValue = JsObject(
-      Map(
-        "key" -> JsNull
-      )
+    val json: JsValue = Json.obj(
+      "key" -> Json.nul
     )
     val result: Option[Option[String]] = (json \ "key").asOpt[String]
     val answer: Option[Option[String]] = Some(None)
@@ -120,7 +112,17 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   "Decoder" should "decodeOpt (3)" in {
 
-    val json: JsValue                  = JsObject(Map.empty)
+    val json: JsValue                  = Json.obj()
+    val result: Option[Option[String]] = (json \ "key").asOpt[String]
+    val answer: Option[Option[String]] = Some(None)
+
+    result shouldEqual answer
+
+  }
+
+  "Decoder" should "decodeOpt (4)" in {
+
+    val json: JsValue                  = Json.nul
     val result: Option[Option[String]] = (json \ "key").asOpt[String]
     val answer: Option[Option[String]] = Some(None)
 
@@ -137,18 +139,14 @@ class DecoderSpec extends FlatSpec with Matchers {
         child: Option[Person]
     )
 
-    val json: JsValue = JsObject(
-      Map(
-        "name" -> JsString("Bob"),
-        "age"  -> JsNumber(42),
-        "favorites" -> JsArray(
-          Vector(
-            JsString("Apple"),
-            JsString("Banana")
-          )
-        ),
-        "child" -> JsNull
-      )
+    val json: JsValue = Json.obj(
+      "name" -> Json.str("Bob"),
+      "age"  -> Json.num(42),
+      "favorites" -> Json.arr(
+        Json.str("Apple"),
+        Json.str("Banana")
+      ),
+      "child" -> Json.nul
     )
 
     implicit object PersonDecoder extends Decoder[Person] {
@@ -180,26 +178,18 @@ class DecoderSpec extends FlatSpec with Matchers {
         child: Option[Person]
     )
 
-    val json: JsValue = JsObject(
-      Map(
-        "name" -> JsString("Bob"),
-        "age"  -> JsNumber(42),
-        "favorites" -> JsArray(
-          Vector(
-            JsString("Apple"),
-            JsString("Banana")
-          )
-        ),
-        "child" -> JsObject(
-          Map(
-            "name" -> JsString("Alice"),
-            "age"  -> JsNumber(24),
-            "favorites" -> JsArray(
-              Vector.empty
-            ),
-            "child" -> JsNull
-          )
-        )
+    val json: JsValue = Json.obj(
+      "name" -> Json.str("Bob"),
+      "age"  -> Json.num(42),
+      "favorites" -> Json.arr(
+        JsString("Apple"),
+        JsString("Banana")
+      ),
+      "child" -> Json.obj(
+        "name"      -> Json.str("Alice"),
+        "age"       -> Json.num(24),
+        "favorites" -> Json.arr(),
+        "child"     -> Json.nul
       )
     )
 

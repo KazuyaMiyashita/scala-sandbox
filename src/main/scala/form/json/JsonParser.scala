@@ -2,7 +2,7 @@ package form.json
 
 import scala.util.parsing.combinator._
 
-class JsonParser extends JavaTokenParsers {
+object JsonParser extends JavaTokenParsers {
 
   def apply(input: String): Either[String, JsValue] = parseAll(value, input) match {
     case Success(result, next) => Right(result)
