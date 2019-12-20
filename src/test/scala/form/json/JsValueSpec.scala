@@ -76,4 +76,66 @@ class JsValueSpec extends FlatSpec with Matchers {
 
   }
 
+  "JsValue" should "convert string value" in {
+
+    val json: JsValue          = JsString("string value")
+    val reuslt: Option[String] = json.as[String]
+    val answer                 = Some("string value")
+
+    reuslt shouldEqual answer
+
+  }
+
+  "JsValue" should "convert double value" in {
+
+    val json: JsValue          = JsNumber(42)
+    val reuslt: Option[Double] = json.as[Double]
+    val answer                 = Some(42)
+
+    reuslt shouldEqual answer
+
+  }
+
+  "JsValue" should "convert boolean value" in {
+
+    val json: JsValue           = JsBoolean(false)
+    val reuslt: Option[Boolean] = json.as[Boolean]
+    val answer                  = Some(false)
+
+    reuslt shouldEqual answer
+
+  }
+
+  "JsValue" should "convert custom format" in {
+
+    import scala.util.Try
+    import java.time.LocalDateTime
+
+    implicit object LocalDateTimeConverter extends Converter[LocalDateTime] {
+      def ldtconvert(str: String): Option[LocalDateTime] = {
+        Try(LocalDateTime.parse(str)).toOption
+      }
+      override def convert(js: JsValue): Option[LocalDateTime] = js match {
+        case JsString(value) => ldtconvert(value)
+        case _               => None
+      }
+    }
+
+    val json: JsValue                 = JsString("2007-12-03T10:15:30")
+    val reuslt: Option[LocalDateTime] = json.as[LocalDateTime]
+    val answer                        = Some(LocalDateTime.of(2007, 12, 3, 10, 15, 30))
+
+    reuslt shouldEqual answer
+
+  }
+
+  "JsPath" should "convert value" in {
+
+    val reuslt: Option[String] = (template \ "name").as[String]
+    val answer                 = Some("WaterShip Down")
+
+    reuslt shouldEqual answer
+
+  }
+
 }

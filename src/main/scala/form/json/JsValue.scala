@@ -3,6 +3,7 @@ package form.json
 trait JsValue {
   def \(key: String): JsPath
   def \(key: Int): JsPath
+  final def as[T](implicit c: Converter[T]): Option[T] = c.convert(this)
 }
 case class JsString(value: String) extends JsValue {
   override def \(key: String): JsPath = JsPath(None)
