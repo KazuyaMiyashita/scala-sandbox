@@ -27,4 +27,11 @@ object Decoder {
     }
   }
 
+  implicit def ListDecoder[U: Decoder] = new Decoder[List[U]] {
+    override def decode(js: JsValue): Option[List[U]] = js match {
+      case JsArray(value) => Some(value.flatMap(_.as[U]).toList)
+      case _              => None
+    }
+  }
+
 }

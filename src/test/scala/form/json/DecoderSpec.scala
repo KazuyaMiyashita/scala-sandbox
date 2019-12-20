@@ -57,4 +57,37 @@ class DecoderSpec extends FlatSpec with Matchers {
 
   }
 
+  "Decoder" should "decode List[String] value (1)" in {
+
+    val json: JsValue = JsArray(
+      Vector(
+        JsString("first"),
+        JsString("second"),
+        JsString("third")
+      )
+    )
+    val reuslt: Option[List[String]] = json.as[List[String]]
+    val answer                       = Some("first" :: "second" :: "third" :: Nil)
+
+    reuslt shouldEqual answer
+
+  }
+
+  "Decoder" should "decode List[String] value (2)" in {
+
+    val json: JsValue = JsArray(
+      Vector(
+        JsString("first"),
+        JsString("second"),
+        JsBoolean(true), // こいつは消滅する
+        JsString("third")
+      )
+    )
+    val reuslt: Option[List[String]] = json.as[List[String]]
+    val answer                       = Some("first" :: "second" :: "third" :: Nil)
+
+    reuslt shouldEqual answer
+
+  }
+
 }
