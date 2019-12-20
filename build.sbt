@@ -17,6 +17,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= circe,
     libraryDependencies ++= akka,
     libraryDependencies += scalaz,
+    libraryDependencies += scalaParser,
     scalafmtOnCompile := true,
   )
 

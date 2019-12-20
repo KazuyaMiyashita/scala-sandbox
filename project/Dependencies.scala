@@ -13,4 +13,5 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-actor" % "2.6.1"
   )
   lazy val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.29"
+  lazy val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 }
