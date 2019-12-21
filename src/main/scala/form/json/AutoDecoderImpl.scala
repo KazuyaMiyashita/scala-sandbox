@@ -37,6 +37,7 @@ object AutoDecoderImpl {
       |    case _ => None
       |  }
       |}
+      |AnonAutoDecoder
       |""".stripMargin
     // println(code) // DEBUG
 
