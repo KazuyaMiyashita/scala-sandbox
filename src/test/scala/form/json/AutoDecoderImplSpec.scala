@@ -53,7 +53,7 @@ class AutoDecoderImplSpec extends FlatSpec with Matchers {
     case class Person(
         name: String,
         age: Int,
-        friend: Option[Person] // ここで再帰的になるとコンパイルできない
+        friend: Option[Person]
     )
 
     val json: JsValue = Json.obj(
@@ -66,6 +66,29 @@ class AutoDecoderImplSpec extends FlatSpec with Matchers {
 
     val reuslt: Option[Person] = json.as[Person]
     val answer                 = Some(Person("Bob", 42, None))
+
+    reuslt shouldEqual answer
+
+  }
+
+  "AutoDecoder" should "decode to case class (3)" in {
+
+    case class Person(
+        name: String,
+        age: Int,
+        friends: List[Person]
+    )
+
+    val json: JsValue = Json.obj(
+      "name"   -> Json.str("Bob"),
+      "age"    -> Json.num(42),
+      "friend" -> Json.nul
+    )
+
+    implicit val personDecoder: Decoder[Person] = Json.autoDecoder[Person]
+
+    val reuslt: Option[Person] = json.as[Person]
+    val answer                 = Some(Person("Bob", 42, Nil))
 
     reuslt shouldEqual answer
 
