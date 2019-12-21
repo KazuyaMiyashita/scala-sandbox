@@ -39,7 +39,7 @@ object Decoder {
     }
   }
 
-  implicit def ListDecoder[U: Decoder] = new Decoder[List[U]] {
+  implicit def listDecoder[U: Decoder] = new Decoder[List[U]] {
     override def decode(js: JsValue): Option[List[U]] = js match {
       // JsArrayの中の要素がUに揃っていなければLeft
       case JsArray(value) =>

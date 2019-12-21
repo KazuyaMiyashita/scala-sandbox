@@ -37,9 +37,8 @@ object AutoDecoderImpl {
       |    case _ => None
       |  }
       |}
-      |AnonAutoDecoder
       |""".stripMargin
-    println(code)
+    // println(code) // DEBUG
 
     c.Expr[Decoder[T]](c.parse(code))
 
