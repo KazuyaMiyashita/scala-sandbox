@@ -17,5 +17,6 @@ object Json {
   def autoDecoder[T]: Decoder[T] = macro AutoDecoderImpl[T]
 
   def encode[T](value: T)(implicit encoder: Encoder[T]): JsValue = encoder.encode(value)
+  def autoEncoder[T]: Encoder[T] = macro AutoEncoderImpl[T]
 
 }

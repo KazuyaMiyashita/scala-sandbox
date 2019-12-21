@@ -126,7 +126,7 @@ class EncoderSpec extends FlatSpec with Matchers {
 
   }
 
-  "Encoder" should "encode case class with custom Encoder" in {
+  "Encoder" should "encode case class with custom Encoder (1)" in {
 
     case class Person(name: String, age: Int)
     val value = Person("Bob", 42)
@@ -142,6 +142,28 @@ class EncoderSpec extends FlatSpec with Matchers {
     val answer: JsValue = Json.obj(
       "name" -> Json.str("Bob"),
       "age"  -> Json.num(42)
+    )
+
+    result shouldEqual answer
+
+  }
+
+  "Encoder" should "encode case class with custom Encoder (2)" in {
+
+    case class Person(name: String, age: Int)
+    val value = Person("Bob", 42)
+
+    implicit object PersonEncoder extends Encoder[Person] {
+      override def encode(value: Person): JsValue = Json.obj(
+        "name" -> Json.str(value.name),
+        "age"  -> Json.num(value.age)
+      )
+    }
+
+    val result: JsValue = Json.encode(value)
+    val answer: JsValue = Json.obj(
+      "name" -> Json.encode("Bob"),
+      "age"  -> Json.encode(42)
     )
 
     result shouldEqual answer
