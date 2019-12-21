@@ -143,4 +143,30 @@ class AutoDecoderImplSpec extends FlatSpec with Matchers {
 
   }
 
+  // TODO: これできないのはしゃあないか
+  // "AutoDecoder" should "decode recursive classes" in {
+
+  //   case class Foo(bar: Option[Bar])
+  //   case class Bar(foo: Option[Foo])
+
+  //   val fooJson: JsValue = Json.obj(
+  //     "bar" -> Json.nul
+  //   )
+  //   val barJson: JsValue = Json.obj(
+  //     "foo" -> Json.nul
+  //   )
+
+  //   implicit val fooDecoder: Decoder[Foo] = Json.autoDecoder[Foo]
+  //   implicit val barDecoder: Decoder[Bar] = Json.autoDecoder[Bar]
+
+  //   val fooReuslt: Option[Foo] = fooJson.as[Foo]
+  //   val fooAnswer              = Some(None)
+  //   fooReuslt shouldEqual fooAnswer
+
+  //   val barReuslt: Option[Bar] = barJson.as[Bar]
+  //   val barAnswer              = Some(None)
+  //   barReuslt shouldEqual barAnswer
+
+  // }
+
 }
