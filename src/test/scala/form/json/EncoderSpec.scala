@@ -60,21 +60,31 @@ class EncoderSpec extends FlatSpec with Matchers {
 
   }
 
-  // "Encoder" should "encode List" in {
+  "Encoder" should "encode List" in {
 
-  //   val value           = List(1, 1, 2, 3, 5)
-  //   val result: JsValue = Json.encode(value)
-  //   val answer: JsValue = Json.arr(
-  //     Json.num(1),
-  //     Json.num(1),
-  //     Json.num(2),
-  //     Json.num(3),
-  //     Json.num(5),
-  //     )
+    val value           = List(1, 1, 2, 3, 5)
+    val result: JsValue = Json.encode(value)
+    val answer: JsValue = Json.arr(
+      Json.num(1),
+      Json.num(1),
+      Json.num(2),
+      Json.num(3),
+      Json.num(5)
+    )
 
-  //   result shouldEqual answer
+    result shouldEqual answer
 
-  // }
+  }
+
+  "Encoder" should "encode Nil" in {
+
+    val value           = Nil
+    val result: JsValue = Json.encode(value)
+    val answer: JsValue = Json.arr()
+
+    result shouldEqual answer
+
+  }
 
   "Encoder" should "encode Option (Some) 1" in {
 
@@ -86,15 +96,15 @@ class EncoderSpec extends FlatSpec with Matchers {
 
   }
 
-  // "Encoder" should "encode Option (Some) 2" in {
+  "Encoder" should "encode Option (Some) 2" in {
 
-  //   val value           = Some(42) // Some[Int]
-  //   val result: JsValue = Json.encode(value)
-  //   val answer: JsValue = Json.num(42)
+    val value           = Some(42) // Some[Int]
+    val result: JsValue = Json.encode(value)
+    val answer: JsValue = Json.num(42)
 
-  //   result shouldEqual answer
+    result shouldEqual answer
 
-  // }
+  }
 
   "Encoder" should "encode Option (None) 1" in {
 
@@ -106,14 +116,14 @@ class EncoderSpec extends FlatSpec with Matchers {
 
   }
 
-  // "Encoder" should "encode Option (None) 2" in {
+  "Encoder" should "encode Option (None) 2" in {
 
-  //   val value           = None // None.type
-  //   val result: JsValue = Json.encode(value)
-  //   val answer: JsValue = Json.nul
+    val value           = None // None.type
+    val result: JsValue = Json.encode(value)
+    val answer: JsValue = Json.nul
 
-  //   result shouldEqual answer
+    result shouldEqual answer
 
-  // }
+  }
 
 }

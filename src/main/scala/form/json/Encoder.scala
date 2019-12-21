@@ -22,15 +22,23 @@ object Encoder {
     override def encode(value: Boolean): JsValue = JsBoolean(value)
   }
 
-  implicit def iterableEncoder[U: Encoder] = new Encoder[Iterable[U]] {
-    override def encode(value: Iterable[U]): JsValue = JsArray(value.map(Json.encode(_)).toVector)
+  implicit def iterableEncoder[U: Encoder, Iter[U] <: Iterable[U]] = new Encoder[Iter[U]] {
+    override def encode(value: Iter[U]): JsValue = JsArray(value.map(Json.encode(_)).toVector)
   }
 
-  implicit def optionEncoder[U: Encoder] = new Encoder[Option[U]] {
-    override def encode(value: Option[U]): JsValue = value match {
+  implicit object NilEncoder extends Encoder[Nil.type] {
+    override def encode(value: Nil.type): JsValue = JsArray(Vector.empty)
+  }
+
+  implicit def optionEncoder[U: Encoder, Opt[U] <: Option[U]] = new Encoder[Opt[U]] {
+    override def encode(value: Opt[U]): JsValue = value match {
       case Some(v) => Json.encode(v)
       case None    => JsNull
     }
+  }
+
+  implicit object NoneEncoder extends Encoder[None.type] {
+    override def encode(value: None.type): JsValue = JsNull
   }
 
 }
