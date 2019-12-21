@@ -1,5 +1,7 @@
 package form.json
 
+import language.experimental.macros
+
 object Json {
 
   def str(value: String): JsValue    = JsString(value)
@@ -11,7 +13,9 @@ object Json {
 
   def parse(input: String): Either[String, JsValue] = JsonParser(input)
 
-  import language.experimental.macros
+  def decode[T](js: JsValue)(implicit decoder: Decoder[T]): Option[T] = decoder.decode(js)
   def autoDecoder[T]: Decoder[T] = macro AutoDecoderImpl[T]
+
+  def encode[T](value: T)(implicit encoder: Encoder[T]): JsValue = encoder.encode(value)
 
 }
