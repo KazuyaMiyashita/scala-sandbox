@@ -94,4 +94,53 @@ class AutoDecoderImplSpec extends FlatSpec with Matchers {
 
   }
 
+  "AutoDecoder" should "decode complex case class" in {
+
+    case class Foo(
+        name: String,
+        location: Location,
+        residents: List[Resident]
+    )
+    case class Location(lat: Double, lng: Double)
+    case class Resident(name: String, age: Int, role: Option[String])
+
+    val json: JsValue = Json.obj(
+      "name" -> Json.str("Watership Down"),
+      "location" -> Json.obj(
+        "lat" -> Json.num(51.235685),
+        "lng" -> Json.num(-1.309197)
+      ),
+      "residents" -> Json.arr(
+        Json.obj(
+          "name" -> Json.str("Fiver"),
+          "age"  -> Json.num(4),
+          "role" -> Json.nul
+        ),
+        Json.obj(
+          "name" -> Json.str("Bigwig"),
+          "age"  -> Json.num(6),
+          "role" -> Json.str("Owsla")
+        )
+      )
+    )
+
+    implicit val locationDecoder: Decoder[Location] = Json.autoDecoder[Location]
+    implicit val residentDecoder: Decoder[Resident] = Json.autoDecoder[Resident]
+    implicit val fooDecoder: Decoder[Foo]           = Json.autoDecoder[Foo]
+    val result: Option[Foo]                         = json.as[Foo]
+    val answer = Some(
+      Foo(
+        "Watership Down",
+        Location(51.235685, -1.309197),
+        List(
+          Resident("Fiver", 4, None),
+          Resident("Bigwig", 6, Some("Owsla"))
+        )
+      )
+    )
+
+    result shouldEqual answer
+
+  }
+
 }
