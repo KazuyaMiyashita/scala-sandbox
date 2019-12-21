@@ -12,6 +12,7 @@ object Json {
   val nul                            = JsNull
 
   def parse(input: String): Either[String, JsValue] = JsonParser(input)
+  def format(value: JsValue): String                = JsonFormatter.spaces2(value)
 
   def decode[T](js: JsValue)(implicit decoder: Decoder[T]): Option[T] = decoder.decode(js)
   def autoDecoder[T]: Decoder[T] = macro AutoDecoderImpl[T]
