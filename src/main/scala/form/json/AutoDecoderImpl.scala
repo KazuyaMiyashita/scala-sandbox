@@ -12,13 +12,11 @@ object AutoDecoderImpl {
     case class Field(name: String, tpe: String) {
       val option = """Option\[(.*)]""".r
       def expression: String = {
-        def addThis(base: String, tpe: String) =
-          if (tpe.contains(s"[${tag.tpe.toString}]")) base + "(this)" else base
         tpe match {
           case option(tp) =>
-            addThis(s"""$name <- (obj \\ "$name").asOpt[$tp]""", tp)
+            s"""$name <- (obj \\ "$name").asOpt[$tp]"""
           case _ =>
-            addThis(s"""$name <- (obj \\ "$name").as[$tpe]""", tpe)
+            s"""$name <- (obj \\ "$name").as[$tpe]"""
         }
       }
     }
@@ -30,7 +28,7 @@ object AutoDecoderImpl {
 
     val code: String =
       s"""
-      |new Decoder[${tag.tpe.toString}] {
+      |implicit object AnonAutoDecoder extends Decoder[${tag.tpe.toString}] {
       |  override def decode(js: JsValue): Option[${tag.tpe.toString}] = js match {
       |    case obj: JsObject =>
       |      for {
@@ -39,6 +37,7 @@ object AutoDecoderImpl {
       |    case _ => None
       |  }
       |}
+      |AnonAutoDecoder
       |""".stripMargin
     println(code)
 
