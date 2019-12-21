@@ -5,12 +5,15 @@ import scala.reflect.macros.whitebox.Context
 
 object AutoDecoderImpl {
 
-  def apply[T](c: Context): c.Expr[Decoder[T]] = {
+  def apply[T: c.WeakTypeTag](c: Context): c.Expr[Decoder[T]] = {
     import c.universe._
 
-    c.Expr(q"""
-    new Decoder[Person] {
-      override def decode(js: JsValue): Option[Person] = None
+    val a   = weakTypeTag[T]
+    val tpe = a.tpe
+
+    c.Expr[Decoder[T]](q"""
+    new Decoder[$tpe] {
+      override def decode(js: JsValue): Option[$tpe] = None
     }
     """)
   }

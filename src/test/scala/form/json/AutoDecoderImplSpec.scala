@@ -6,6 +6,11 @@ class AutoDecoderImplSpec extends FlatSpec with Matchers {
 
   "AutoDecoder" should "decode to case class (1)" in {
 
+    case class Person(
+        name: String,
+        age: Int
+    )
+
     val json: JsValue = Json.obj(
       "name" -> Json.str("Bob"),
       "age"  -> Json.num(42)
