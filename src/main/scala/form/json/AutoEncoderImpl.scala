@@ -29,7 +29,7 @@ object AutoEncoderImpl {
       |}
       |AnonAutoEncoder
       |""".stripMargin
-    println(code) // DEBUG
+    // println(code) // DEBUG
 
     c.Expr[Encoder[T]](c.parse(code))
   }
