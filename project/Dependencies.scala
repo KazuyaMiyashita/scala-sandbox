@@ -17,4 +17,6 @@ object Dependencies {
   lazy val scalaRefrect = "org.scala-lang" % "scala-reflect" % "2.13.1"
 
   lazy val mysql = "mysql" % "mysql-connector-java" % "8.0.18"
+
+  lazy val scalafx = "org.scalafx" %% "scalafx" % "12.0.2-R18"
 }

@@ -33,4 +33,13 @@ lazy val infra = (project in file("infra"))
   )
   .dependsOn(root)
 
+lazy val gui = (project in file("gui"))
+  .settings(
+    name := "scala-sandbox-gui",
+    commonSettings,
+    libraryDependencies += scalafx,
+    fork in run := true,
+  )
+  .dependsOn(root)
+
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
