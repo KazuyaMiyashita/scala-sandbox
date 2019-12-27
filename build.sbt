@@ -9,6 +9,7 @@ lazy val commonSettings = Seq(
   scalacOptions ++= "-deprecation" :: "-feature" :: "-Xlint" :: Nil,
   scalacOptions in (Compile, console) ~= {_.filterNot(_ == "-Xlint")},
   scalafmtOnCompile := true,
+  addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
 )
 
 lazy val root = (project in file("."))
@@ -17,7 +18,7 @@ lazy val root = (project in file("."))
     commonSettings,
     libraryDependencies += scalaTest % Test,
     libraryDependencies += scalaMock % Test,
-    libraryDependencies += cats,
+    libraryDependencies ++= cats,
     libraryDependencies ++= circe,
     libraryDependencies ++= akka,
     libraryDependencies += scalaz,

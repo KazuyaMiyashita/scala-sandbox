@@ -1,7 +1,6 @@
 package resource
 
 import org.scalatest._
-import org.scalamock.scalatest.MockFactory
 
 class ResourceSpec extends FlatSpec with Matchers {
 
